@@ -1,13 +1,13 @@
 # Diseño de Software
 
-### Juego del laberinto (24-25)
+## Juego del laberinto (24-25)
 
 ---
 
 Repositorio en el que estará mi implementación en **Python** del laberinto hecho en clase en **Smalltalk**.
 El documento se irá actualizando para añadir, modificar, o eliminar, si fuese necesario, las explicaciones de cada elemento, además de también actualizar el diagrama UML.
 
-#### Características:
+### Características:
 
 - **Laberinto** 🧩: Contenedor de habitaciones. Dispone de funciones para añadir o conectar elementos
 - **ElementoMapa** 🗺️: Clase padre o base de los elementos de los que estará compuesto el mapa (pared, puerta, habitación...)
@@ -21,6 +21,6 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 ---
 
-#### Diagrama UML
+### Diagrama UML
 
 ![Diagrama UML](https://github.com/danreqmun/laberinto25/blob/main/UML_laberinto.png?raw=true)
