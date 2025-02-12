@@ -18,3 +18,9 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 - **Creator** 🛠️: Con esta clase podemos fabricar el laberinto y fabricar paredes.
   - **CreatorB**: Subclase de *Creator* que fabrica paredes bomba.
+
+---
+
+#### Diagrama UML
+
+![Diagrama UML](https://github.com/danreqmun/laberinto25/blob/main/UML_laberinto.png?raw=true)
