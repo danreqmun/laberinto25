@@ -23,4 +23,4 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 ### Diagrama UML
 
-![Diagrama UML](https://github.com/danreqmun/laberinto25/blob/main/UML_laberinto.png?raw=true)
+![Diagrama UML](https://github.com/danreqmun/laberinto25/blob/main/Main.png?raw=true)
