@@ -16,8 +16,9 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
     - **ParedBomba** 💣: Clase que hereda de *Pared*. Tiene una bomba que puede o no estar ```activa```.
   - **Puerta** 🚪: Una habitación necesita una puerta para poder entrar, o salir. Estas conectan habitaciones, pues una puerta tiene ```lado1``` y ```lado2```. Puede estar, o no, ```abierta```.
 
-- **Creator** 🛠️: Con esta clase podemos fabricar el laberinto y fabricar paredes.
-  - **CreatorB**: Subclase de *Creator* que fabrica paredes bomba.
+~~- **Creator** 🛠️: Con esta clase podemos fabricar el laberinto y fabricar paredes.~~
+  ~~- **CreatorB**: Subclase de *Creator* que fabrica paredes bomba.~~
+  - **Decorator**:
 
 ---
 
