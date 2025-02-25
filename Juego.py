@@ -1,80 +1,85 @@
-""" 12 febrero """
+""" 23 de febrero """
 
-from abc import ABC, abstractmethod
-
-
-class ElementoMapa(ABC):
-    @abstractmethod
+class ElementoMapa:
     def entrar(self):
         pass
 
+class Contenedor(ElementoMapa):
+    def __init__(self):
+        self.hijos = []
+        self.padre = None
+    
+    def agregar_hijo(self, hijo):
+        self.hijos.append(hijo)
+        hijo.padre = self
+
+class Hoja(ElementoMapa):
+    pass
+
+class Decorator(Hoja):
+    def __init__(self, elemento):
+        self.elemento = elemento
+    
+    def entrar(self):
+        self.elemento.entrar()
+
+class Bomba(Decorator):
+    def __init__(self, elemento):
+        super().__init__(elemento)
+        self.activa = False
 
 class Habitacion(ElementoMapa):
-    def __init__(self):
+    def __init__(self, num):
+        self.num = num
         self.norte = None
         self.sur = None
         self.este = None
         self.oeste = None
-        self.num = None
-
-    def entrar(self):
-        print(f"Has entrado a la habitación {self.num}")
-
 
 class Pared(ElementoMapa):
-    def entrar(self):
-        print("Te has chocado contra una pared")
+    pass
+
+class ParedBomba(Pared):
+    def __init__(self):
+        self.activa = False
 
 class Puerta(ElementoMapa):
+    def __init__(self, lado1, lado2, abierta=False):
+        self.lado1 = lado1
+        self.lado2 = lado2
+        self.abierta = abierta
+
+class Laberinto:
     def __init__(self):
-        self.abierta = False
-        self.lado1 = None
-        self.lado2 = None
+        self.habitaciones = []
+    
+    def agregar_habitacion(self, habitacion):
+        self.habitaciones.append(habitacion)
 
-    def entrar(self):
-        if self.abierta:
-            print("Has pasado a la siguiente habitación")
-        else:
-            print("Te has chocado contra la puerta, está cerrada")
+class Bicho:
+    def __init__(self, vidas, poder, modo):
+        self.vidas = vidas
+        self.poder = poder
+        self.modo = modo
+        self.posicion = None
 
-class Laberinto(Habitacion):
-    def __init__(self):
-        self.habitaciones = list()
+class Modo:
+    pass
 
-    def agregarHabitacion(self, hab):
-        self.habitaciones.append(hab)
+class Agresivo(Modo):
+    pass
 
-    def eliminarHabitacion(self, hab):
-        if hab in self.habitaciones:
-            self.habitaciones.remove(hab)
-        else:
-            print("No existe ese objeto habitación")
-
-
+class Perezoso(Modo):
+    pass
 
 class Juego:
-    def __init__(self):
-        self.laberinto = None
-
-    def crearPared(self):
-        return Pared()
-
-    def crearPuerta(self, abierta, lado1, lado2):
-        puerta = Puerta()
-        puerta.abierta = True
-        puerta.lado1 = lado1
-        puerta.lado2 = lado2
-
-        return puerta
-
-    def crearHabitacion(self, num):
-        habitacion = Habitacion()
-        habitacion.num = num
-        habitacion.norte = self.crearPared()
-        habitacion.sur = self.crearPared()
-        habitacion.este = self.crearPared()
-        habitacion.oeste = self.crearPared()
-        return habitacion
-
-
-    def crearLaberinto2Habitaciones(self):
+    def fabricarLaberinto2HabFM(self, unCreator):
+        laberinto = Laberinto()
+        h1 = Habitacion(1)
+        h2 = Habitacion(2)
+        puerta = Puerta(h1, h2, abierta=True)
+        h1.este = puerta
+        h2.oeste = puerta
+        laberinto.agregar_habitacion(h1)
+        laberinto.agregar_habitacion(h2)
+        return laberinto
