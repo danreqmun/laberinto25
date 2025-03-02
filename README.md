@@ -18,7 +18,7 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 - **Creator** 🛠️: Con esta clase podemos fabricar el laberinto y sus elementos (fabricar pared, fabricar puerta, fabricar habitación...).
   - **CreatorB**: Subclase de *Creator* que fabrica paredes bomba.
-
+- **Decorator**: Hereda de ElementoMapa y crea Bombas.
 ---
 
 ### Diagrama UML
