@@ -1,6 +1,12 @@
 
 """ 2/03/25 """
 
+class COLOR:
+    FIN = '\033[0m'   # hay que ponerlo al final de cada frase o si no el resto del programa usará el color anterior
+    AMARILLO = '\033[93m' # orador
+    ROJO = '\033[91m'     # algo malo
+    AZUL = '\033[94m'     # monologo
+
 # FACTORY METHOD
 class ElementoMapa:
     def __init__(self):
@@ -31,7 +37,7 @@ class Pared(ElementoMapa):
         super().__init__()
 
     def entrar(self):
-        print("te has chocado contra una pared")
+        print(COLOR.ROJO + "te has chocado contra una pared" + COLOR.FIN)
 
     def __repr__(self):
         return "Pared"
@@ -42,13 +48,13 @@ class ParedBomba(Pared):
         self.activa = False
 
     def entrar(self):
-        print("te has chocado contra una pared bomba")
+        print( COLOR.ROJO + "te has chocado contra una pared bomba" + COLOR.FIN)
 
     def is_activa(self):
         if self.activa:
-            return "Hmm, parece una pared normal y corriente... espero que no... explote..."
+            return COLOR.AZUL + "Hmm, parece una pared normal y corriente... espero que no... explote..." + COLOR.FIN
         else:
-            return "Creo que es una pared... normal... como las demás..."
+            return COLOR.AZUL + "Creo que es una pared... normal... como las demás..." + COLOR.FIN
 
     def activar_pared_bomba(self):
         self.activa = True
@@ -89,7 +95,7 @@ class Laberinto(ElementoMapa):
         self.habitaciones = []
 
     def entrar(self):
-        print("Bienenido al laberinto")
+        print(COLOR.AMARILLO + "Bienenido al laberinto" + COLOR.FIN)
 
     def agregar_habitacion(self, hab):
         self.habitaciones.append(hab)
@@ -120,6 +126,9 @@ class Bomba(Decorator):
 
     def __repr__(self):
         return "Bomba"
+
+    def activar_bomba(self):
+        self.activa = True
 
 
 
@@ -327,14 +336,19 @@ if __name__ == "__main__":
 
     for hab in juego.laberinto.habitaciones:
         print(f"Habitación: {hab.num}")
+        print(f"Norte: {hab.norte}, Sur: {hab.sur}, Este: {hab.este}, Oeste: {hab.oeste}")
         if hasattr(hab, "bicho"):
             bicho = hab.bicho
             print(f"Bicho --- vidas: {bicho.vidas}, Poder: {bicho.poder}, Posicion: {bicho.posicion}, Modo: {bicho.modo}")
 
-        print(hab.norte)
-
 
         print("\n")
+
+    juego.laberinto.entrar()
+    print(COLOR.AZUL + "Hmm, he visto el mapa, no sé si está al revés, pero creo que puedo ir hacia adelante..." + COLOR.FIN)
+    hab1.norte.entrar()
+    print(COLOR.AZUL + "Ah, estaba al revés" + COLOR.FIN)
+
 
     print("\n\nLaberinto 2 habitaciones con pared bomba\n")
 
@@ -346,7 +360,7 @@ if __name__ == "__main__":
     print(f"Hab {hab1.num} - este: {hab1.este}")
     print(f"Hab {hab1.num} - oeste: {hab1.oeste.is_activa()} (activa: {hab1.oeste.activa})")
     hab1.este.entrar()
-    print("Se me ha olvidado que las puertas se tienen que abrir para pasar primero")
+    print(COLOR.AZUL + "Se me ha olvidado que las puertas se tienen que abrir para pasar primero" + COLOR.FIN)
     hab1.este.abrir()
     hab1.este.entrar()
     hab2.este.activar_pared_bomba()
