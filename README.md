@@ -21,9 +21,16 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 - **Creator** 🛠️: Con esta clase podemos fabricar el laberinto y sus elementos (fabricar pared, fabricar puerta, fabricar habitación...).
   - **CreatorB**: Subclase de *Creator* que fabrica paredes bomba.
-- **Decorator**: Hereda de ElementoMapa y crea Bombas.
+- **Decorator**: Sirve para agregar responsabilidades nuevas (Bomba) a otros objetos (Pared, Puerta...). Hereda de ElementoMapa y crea Bombas.
 
-- **Bicho** 🐛: Un bicho puede ser ```agresivo``` o ```perezoso```, depende del modo en el que se encuentren. 
+- **Bicho** 🐛: Un bicho puede ser ```agresivo``` o ```perezoso```, depende del modo en el que se encuentren.
+  - **Strategy**: Encapsula familias de algoritmos como objetos. En nuestro proyecto, lo hemos implementado para el modo de los bichos (Agresivo o Perezoso).
+
+- **Composite**: Lo utilizamos para representar estructuras recursivas todo-parte. Simplifica a los clientes porque pueden tratar de manera uniforme a compuestos y hojas. En nuestro proyecto, el Composite lo forman ElementoMapa (Component), Contenedor (Composite) y Hoja (Leaf)
+- **Iterator**: El iterador interno se implementa con la operación recorrer(unBloque). El parámetro unBloque es una función anónima. Es adecuado para estructuras tipo Composite.
+- **Singleton**: Implementado en las Orientaciones.
+- **Template Method**: EL método ```actua``` de Modo es un Template Method. Las operaciones primitivas son: dormir, caminar, y atacar.
+
 ---
 
 ### Diagrama UML
