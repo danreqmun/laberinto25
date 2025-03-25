@@ -2,12 +2,13 @@
 
 ## Juego del laberinto (24-25)
 
+### La última implementación del proyecto está aun work in progress
+
 ---
 
 Repositorio en el que estará mi implementación en **Python** del laberinto hecho en clase en **Smalltalk**.
 El documento se irá actualizando para añadir, modificar, o eliminar, si fuese necesario, las explicaciones de cada elemento, además de también actualizar el diagrama UML.
 
-El diagrama *Main.png* es el estado actual. *UML_laberinto.png* es lo que llevamos hecho de clase y el objetivo final a ser desarrollado.
 
 ### Características:
 
