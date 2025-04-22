@@ -1,7 +1,5 @@
 
-""" 08/04/25 """
-
-
+""" 22/04/25 """
 import copy
 import json
 import threading
@@ -505,7 +503,7 @@ class Creator:
         bicho.poder=poder
         bicho.posicion=posicion
         bicho.modo=modo
-        return Bicho()
+        return bicho
 
     def crear_bicho_agresivo(self):
         return Agresivo()
@@ -663,22 +661,22 @@ class Director:
                 for cadaUno in each['hijos']:
                     self.fabricarLaberintoRecursivo(cadaUno, con)
 
-        def leerArchivo(self, filename):
-            try:
-                with open(filename, 'r') as f:
-                    data = json.load(f)
-                self.dict = data
-                return data
-            except FileNotFoundError:
-                print(f"Error: File not found: {filename}")
-                return None
-            except json.JSONDecodeError:
-                print(f"Error: Invalid JSON format in file: {filename}")
-                return None
+    def leerArchivo(self, filename):
+        try:
+            with open(filename, 'r') as f:
+                data = json.load(f)
+            self.dict = data
+            return data
+        except FileNotFoundError:
+            print(f"Error: File not found: {filename}")
+            return None
+        except json.JSONDecodeError:
+            print(f"Error: Invalid JSON format in file: {filename}")
+            return None
 
-        def fabricarBichos(self):
-            for each in self.dict['bichos']:
-                self.builder.fabricarBicho(each['modo'], each['posicion'])
+    def fabricarBichos(self):
+        for each in self.dict['bichos']:
+            self.builder.fabricarBicho(each['modo'], each['posicion'])
 
 
 # JUEGO
@@ -765,13 +763,13 @@ class Juego:
         hab4.ponerElementoEnOrientacion(puerta24, Norte())
         hab4.ponerElementoEnOrientacion(puerta43, Oeste())
 
-        bicho1 = creator.crear_bicho(5, 10, creator.crear_bicho_agresivo(), hab1)
+        bicho1 = creator.crear_bicho(5, 10, hab1, creator.crear_bicho_agresivo())
         self.agregarBicho(bicho1)
-        bicho3 = creator.crear_bicho(5, 10, creator.crear_bicho_agresivo(), hab3)
+        bicho3 = creator.crear_bicho(5, 10, hab3, creator.crear_bicho_agresivo())
         self.agregarBicho(bicho3)
-        bicho2 = creator.crear_bicho(5, 1, creator.crear_bicho_perezoso(), hab2)
+        bicho2 = creator.crear_bicho(5, 1, hab2, creator.crear_bicho_perezoso())
         self.agregarBicho(bicho2)
-        bicho4 = creator.crear_bicho(5, 1, creator.crear_bicho_perezoso(), hab4)
+        bicho4 = creator.crear_bicho(5, 1, hab4, creator.crear_bicho_perezoso())
         self.agregarBicho(bicho4)
 
         hab1.bicho = bicho1
