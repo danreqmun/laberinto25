@@ -1,4 +1,7 @@
-""" 19/05/25 """
+""" 24/05/25 """
+import sys
+
+from LabBuilderImp import *
 
 import copy
 import json
@@ -8,16 +11,153 @@ import random
 #from point import Point
 import tkinter as tk
 
+
+
 class COLOR:
     FIN = '\033[0m'   # hay que ponerlo al final de cada frase o si no el resto del programa usará el color anterior
     ORADOR = '\033[93m' # orador
-    ALGOMALO = '\033[91m'     # algo malo
-    MONOLOGO = '\033[94m'     # monologo
-    PARPADEO = '\033[5m'      # el texto parpadea
-    WARNINGACCION = '\033[41m'
+    ALGOMALO = '\033[91m'     # algo malo en el gameplay
+    MONOLOGO = '\033[94m'     # monologo personaje
+    BLANCO = '\033[7m'      # fondo blanco
+    MORADO = '\033[45m'
+    WARNINGACCION = '\033[41m' # fondo rojo
 
 
 
+######################################################
+
+"""
+IMPLEMENTACIONES
+"""
+
+class ObjetosMapa:
+    def __init__(self, nombre):
+        self.nombre = nombre
+
+    def usar(self, personaje):
+        pass
+
+    def recoger(self, personaje):
+        pass
+
+    def devPeso(self):
+        pass
+
+    def recorrer(self, func):
+        pass
+
+class HojaObjeto(ObjetosMapa):
+    def __init__(self, nombre, peso):
+        super().__init__(nombre)
+        self._peso = peso
+
+    def usar(self, personaje):
+        pass
+
+    def es_usable(self, personaje):
+        pass
+
+    def aplicarEfecto(self, personaje):
+        pass
+
+    def recoger(self, personaje):
+        personaje.inventario.agregar(self)
+
+    def devPeso(self):
+        return self._peso
+
+
+
+# template method
+class Totem(HojaObjeto):
+    def __init__(self):
+        super().__init__("Tótem de la inmortalidad", peso=2)
+
+    def usar(self, personaje):
+        if self.es_usable(personaje):
+            self.aplicarEfecto(personaje)
+
+    def es_usable(self, personaje):
+        return isinstance(personaje.estadoEnte, Muerto)
+
+    def aplicarEfecto(self, personaje):
+        #personaje.estadoEnte = Muerto # ya se comprueba en es_usable en este caso
+        personaje.estadoEnte.vivir(personaje)  # Estado Muerto.vivir revive al personaje
+        personaje.vidas = 20
+        personaje.poder = 12
+
+
+
+class Pocima(HojaObjeto):
+    def __init__(self):
+        super().__init__("Pocima de escudo", 1)
+
+    def usar(self, personaje):
+        if self.es_usable(personaje):
+            self.aplicarEfecto(personaje)
+
+    def es_usable(self, personaje):
+        return isinstance(personaje.estadoEnte, Vivo)
+
+    def aplicarEfecto(self, personaje):
+        personaje.vidas += 3
+
+
+
+class Bolsa(ObjetosMapa):
+    def __init__(self, nombre = "Bolsa"):
+        super().__init__(nombre)
+        self.hijos = []
+
+    def agregar(self, obj):
+        if isinstance(obj, ObjetosMapa):
+            self.hijos.append(obj)
+        else:
+            print(f"Esto no es un objeto del mapa")
+
+    def recoger(self, personaje):
+        personaje.inventario.agregar(self)
+
+    def usar(self, personaje):
+        print(f"Usando el contenido de la bolsa '{self.nombre}':")
+        for obj in self.hijos:
+            obj.usar(personaje)
+
+    def devPeso(self):
+        return sum(obj.devPeso() for obj in self.hijos)
+
+
+
+class Inventario:
+    def __init__(self, peso_maximo):
+        self.peso_maximo = peso_maximo
+        self.objetos = []
+
+    def pesoTotal(self):
+        return sum(obj.devPeso() for obj in self.objetos)
+
+    def agregar(self, obj):
+        if self.pesoTotal() + obj.devPeso() <= self.peso_maximo:
+            self.objetos.append(obj)
+            print(f"Objeto {COLOR.BLANCO} {obj.nombre} {COLOR.FIN} añadido al inventario")
+        else:
+            print(f"No se puede añadir {obj.nombre} al inventario. Peso máximo: {self.peso_maximo} ")
+
+    def usar(self, personaje, nombre_obj):
+        for obj in self.objetos:
+            if obj.nombre == nombre_obj:
+                obj.usar(personaje)
+                self.objetos.remove(obj)
+                break
+            else:
+                print(f"No tienes el objeto {obj.nombre}")
+
+    def tiene_objeto(self, tipo):
+        return any(isinstance(obj, tipo) for obj in self.objetos)
+
+
+
+######################################################
 # FACTORY METHOD --- COMPONENT
 class ElementoMapa:
     def __init__(self):
@@ -52,6 +192,7 @@ class Contenedor(ElementoMapa):
         self.hijos = []
         self.orientaciones = []
         self.forma = None
+
 
     def agregarHijo(self, hijo):
         hijo.padre = self
@@ -133,7 +274,7 @@ class Forma:
             orientacion.calcularPosicionDesde(self)
 
     def caminarAleatorio(self, ente):
-        orientacion=self.obtenerOrientacionAleatoria()
+        orientacion = self.obtenerOrientacionAleatoria()
         print(f"Orientacion aleatoria: {orientacion}")
         orientacion.caminarAleatorio(ente, self)
 
@@ -315,8 +456,20 @@ class Habitacion(Contenedor):
         self.num = num
 
     def entrar(self, alguien):
-        print(f"{COLOR.ORADOR} {alguien} entrando en la habitación {self.num} {COLOR.FIN}")
+        print(f"{COLOR.ORADOR} {alguien} ha entrado en la habitación {self.num} {COLOR.FIN}")
         alguien.posicion = self
+
+        if isinstance(alguien, Personaje):
+            alguien.atacar()  # → llama a juego.buscarBicho()
+            if hasattr(self, "bicho") and self.bicho.estaVivo():
+                self.bicho.atacar()
+
+        if isinstance(alguien.estadoEnte, Vivo):
+            for hijo in list(self.hijos):
+                if isinstance(hijo, ObjetosMapa):
+                    hijo.recoger(alguien)
+                    self.hijos.remove(hijo)
+
 
     def visitarContenedor(self, unVisitor):
         unVisitor.visitarHabitacion(self)
@@ -333,7 +486,7 @@ class Pared(ElementoMapa):
     def __init__(self):
         super().__init__()
 
-    def entrar(self):
+    def entrar(self, alguien):
         print(COLOR.ALGOMALO + "te has chocado contra una pared" + COLOR.FIN)
 
     def __repr__(self):
@@ -426,7 +579,7 @@ class Laberinto(Contenedor):
         #self.habitaciones = []
 
     def entrar(self, alguien):
-        print(COLOR.ORADOR + "Bienvenido al laberinto" + COLOR.FIN)
+        print(COLOR.ORADOR + "\n \n \nBienvenido al laberinto" + COLOR.FIN)
         hab1 = self.obtenerHabitacion(1)
         hab1.entrar(alguien)
 
@@ -446,14 +599,10 @@ class Laberinto(Contenedor):
         return None
 
     def recorrer(self, func):
-        func(self)
         for hijo in self.hijos:
+            func(hijo)
             hijo.recorrer(func)
 
-    def entrar(self, alguien):
-        hab1 = self.obtenerHabitacion(1)
-        hab1.entrar(alguien)
-        print(f"{alguien} ha entrado en el laberinto")
 
     def aceptar(self, unVisitor):
         for hijo in self.hijos:
@@ -579,7 +728,7 @@ class LaberintoBuilder:
 
     def fabricarTunelEn(self, unCont):
         tunel = Tunel(None)
-        unCont.agregar_hijo(tunel)
+        unCont.agregarHijo(tunel)
 
 # DECORATOR
 class Decorator(Hoja):
@@ -671,6 +820,19 @@ class Creator:
         return Perezoso()
 
 
+    def crearTotem(self):
+        return Totem()
+
+    def crearPocima(self):
+        return Pocima()
+
+    def crearBolsa(self):
+        bolsa = Bolsa()
+        bolsa.agregar(Pocima())
+        bolsa.agregar(Pocima())
+        return bolsa
+
+
 class CreatorB(Creator):
     def crear_pared_bomba(self):
         return ParedBomba()
@@ -750,20 +912,38 @@ class Ente:
     def clonarLaberinto(self, tunel):
         pass
 
+    def estaVivo(self):
+        pass
+
     def esAtacadoPor(self, unAtacante):
         print(f"{COLOR.WARNINGACCION} Ataque {COLOR.FIN} : {self} está siendo atacado por {unAtacante}")
         self.vidas = self.vidas - unAtacante.poder
-        print(f"{COLOR.ORADOR} Vidas restantes: {self.vidas} {COLOR.FIN}")
+        if self.vidas <= 0:
+            self.vidas = 0
+        print(f"{COLOR.ORADOR} {self} Vidas restantes: {self.vidas} {COLOR.FIN}")
         if self.vidas == 0:
             print(f"{COLOR.ORADOR} El ente {self} ha muerto {COLOR.FIN}")
-            self.estadoEnte.morir(self)
+            if isinstance(self, Personaje):
+                if self.inventario.tiene_objeto(Totem):
+                    print(f"{COLOR.ORADOR} {self.nombre} ha usado el Tótem de la inmortalidad... {COLOR.BLANCO} ¡HA REVIVIDO! {COLOR.FIN}")
+                    self.inventario.usar(self, "Tótem de la inmortalidad")
+                    self.estadoEnte = Vivo()
+                    return
+                self.estadoEnte.morir(self)
+            else:
+                self.estadoEnte = Muerto()
+
 
 class Personaje(Ente):
     def __init__(self, vidas, poder, posicion, juego, nombre):
         super().__init__()
-        self.nombre = nombre
         self.vidas = vidas
+        self.poder = poder
+        self.posicion = posicion
         self.juego = juego
+        self.nombre = nombre
+
+        self.inventario = Inventario(peso_maximo=10)     # IMPLEMENTACION
 
     def clonarLaberinto(self, tunel):
         tunel.puedeClonarLaberinto()
@@ -774,7 +954,10 @@ class Personaje(Ente):
     def caminar(self):
         print(self.posicion.num)
         self.posicion.caminarAleatorio(self)
-        print(f"El personaje {self} está caminando")
+        print(f"El personaje {self} está caminando \n")
+
+    def estaVivo(self):
+        return isinstance(self.estadoEnte, Vivo)
 
     def __repr__(self):
         return self.nombre
@@ -800,6 +983,8 @@ class Vivo(EstadoEnte):
     def morir(self, ente):
         print(f"{COLOR.ORADOR} El ente muere {COLOR.FIN}")
         ente.estadoEnte = Muerto()
+        print("DEBUG UESGESUIHGIUGHUIGHIUHGIPGHPHW<IDHGUWIDGHUEWIDHWEG")
+        ente.juego.terminarJuego()
 
 class Muerto(EstadoEnte):
     def __init__(self):
@@ -810,7 +995,7 @@ class Muerto(EstadoEnte):
         ente.estadoEnte = Vivo()
 
     def morir(self, ente):
-        print(f"{COLOR.ORADOR} El ente ya está muerto {COLOR.FIN}")
+        print(f"{COLOR.ORADOR} El ente {ente} ya está muerto {COLOR.FIN}")
         ente.juego.terminarJuego()
 
 
@@ -882,7 +1067,8 @@ class Bicho(Ente):
         self.posicion.caminarAleatorio(self)
 
     def estaVivo(self):
-        return self.vidas > 0
+        #return self.vidas > 0
+        return isinstance(self.estadoEnte, Vivo)
 
     def __str__(self):
         return f"Bicho {self.modo.__str__()}"
@@ -950,8 +1136,8 @@ class LaberintoGUI:
             hab = juego.obtenerHabitacion(pos)
             print("bicho posicion", bicho.posicion)
             print("bicho posicion num:", hab.num)
-            print("forma x bichooo:", hab.forma.punto.x)
-            print("forma y bichooo:", hab.forma.punto.y)
+            print("forma x bicho:", hab.forma.punto.x)
+            print("forma y bicho:", hab.forma.punto.y)
 
             x = hab.forma.punto.x + hab.forma.extent.x // 2
             y = hab.forma.punto.y + hab.forma.extent.y // 2
@@ -1081,6 +1267,7 @@ class Director:
         self.iniBuilder()
         self.fabricarLaberinto()
         self.fabricarJuego()
+        self.fabricarObjetos()
         self.fabricarBichos()
 
     def fabricarJuego(self):
@@ -1089,8 +1276,8 @@ class Director:
     def iniBuilder(self):
         if self.dict['forma'] == 'cuadrado':
             self.builder=LaberintoBuilder()
-#        elif self.dict['forma'] == 'cuadrado_modificado':
-#            self.builder = LaberintoBuilderModificado()
+        elif self.dict['forma'] == 'cuadrado_implementaciones':
+            self.builder = LabBuilderImp()
 
     def fabricarLaberinto(self):
         self.builder.fabricarLaberinto()
@@ -1102,7 +1289,6 @@ class Director:
             self.builder.fabricarPuerta(each[0], each[1], each[2], each[3])
 
     def fabricarLaberintoRecursivo(self,  each, padre):
-        print(each)
         if each['tipo'] == 'habitacion':
             con = self.builder.fabricarHabitacion(each['num'])
         if each['tipo'] == 'tunel':
@@ -1110,6 +1296,18 @@ class Director:
         if 'hijos' in each.keys():
             for cadaUno in each['hijos']:
                 self.fabricarLaberintoRecursivo(cadaUno, con)
+
+    def fabricarObjetos(self):
+        for hab in self.dict['laberinto']:
+            num = hab["num"]
+            hijos = hab.get("hijos", [])
+            for hijo in hijos:
+                if hijo == "Totem":
+                    self.builder.fabricarTotem()
+                if hijo == "Pocima":
+                    self.builder.fabricarPocima(num)
+                if hijo == "Bolsa":
+                    self.builder.fabricarBolsa(num)
 
     def leerArchivo(self, filename):
         try:
@@ -1180,19 +1378,20 @@ class Juego:
             self.terminarBicho(bicho)
 
     def agregarPersonaje(self, nombre):
-        self.personaje = Personaje(20, 3, None, self, nombre)
+        self.personaje = Personaje(20, 5, None, self, nombre)
         self.laberinto.entrar(self.personaje)
 
     def buscarPersonaje(self, bicho):
         if bicho.posicion.num == self.personaje.posicion.num:
-            print(f"El bicho {bicho} ataca al personaje {self.personaje}")
+            print(f"El personaje {bicho} ataca al personaje {self.personaje}")
             self.personaje.esAtacadoPor(bicho)
 
     def buscarBicho(self):
         for bicho in self.bichos:
             if bicho.posicion.num == self.personaje.posicion.num:
-                print(f"El bicho {bicho} es atacado por {self.personaje}")
+                print(f"El bicho {bicho} es atacado por el personaje {self.personaje}")
                 bicho.esAtacadoPor(self.personaje)
+
 
     def abrirPuertas(self):
         def abrirPuertas(obj: Habitacion):
@@ -1222,7 +1421,38 @@ class Juego:
         self.laberinto.recorrer(cerrarPuertas)
 
     def iniciar_juego(self):
-        pass
+        self.abrirPuertas()
+        self.agregarPersonaje("Jacinto")
+        self.lanzarBichos()
+        """
+        while len(juego.bichos) > 0:
+            juego.personaje.caminar()
+            juego.buscarBicho()
+            time.sleep(5)
+        """
+        while self.bichos:
+            enemigos = [b for b in self.bichos if b.posicion.num == self.personaje.posicion.num and b.estaVivo()]
+            while enemigos and self.personaje.estaVivo():
+                self.personaje.atacar()
+                for bicho in enemigos:
+                    if bicho.estaVivo():
+                        bicho.atacar()
+                enemigos = [b for b in self.bichos if b.posicion.num == self.personaje.posicion.num and b.estaVivo()]
+
+            if self.personaje.estaVivo():
+                self.personaje.caminar()
+
+        self.terminarJuego()
+
+    def terminarJuego(self):
+        self.terminarBichos()
+        if self.personaje.estaVivo():
+            print(f"\n🎉 {COLOR.ORADOR} ¡{self.personaje.nombre} ha ganado el juego! {COLOR.FIN}")
+        else:
+            print(f"\n💀 {COLOR.ALGOMALO} {self.personaje.nombre} ha muerto. ¡Los bichos ganan! {COLOR.FIN}")
+        sys.exit()
+
+
 
     def obtenerHabitacion(self, num):
         return self.laberinto.obtenerHabitacion(num)
@@ -1316,26 +1546,77 @@ class Juego:
         laberinto.agregarHabitacion(hab2)
         return laberinto
 
-    def terminarJuego(self):
-        self.terminarBichos()
 
+
+    def crearLaberinto4habitacionesImplementaciones(self, creator):
+        #   hab1  hab2
+        #   hab3  hab4
+        laberinto = creator.crear_laberinto()
+
+        hab1 = creator.crearHabitacion(1)
+        hab2 = creator.crearHabitacion(2)
+        hab3 = creator.crearHabitacion(3)
+        hab4 = creator.crearHabitacion(4)
+
+
+        puerta12 = creator.crear_puerta(hab1, hab2)
+        puerta24 = creator.crear_puerta(hab2, hab4)
+        puerta43 = creator.crear_puerta(hab4, hab3)
+        puerta31 = creator.crear_puerta(hab3, hab1)
+
+        hab1.ponerElementoEnOrientacion(puerta12, Este())
+        hab1.ponerElementoEnOrientacion(puerta31, Sur())
+        hab2.ponerElementoEnOrientacion(puerta12, Oeste())
+        hab2.ponerElementoEnOrientacion(puerta24, Sur())
+        hab3.ponerElementoEnOrientacion(puerta43, Este())
+        hab3.ponerElementoEnOrientacion(puerta31, Norte())
+        hab4.ponerElementoEnOrientacion(puerta24, Norte())
+        hab4.ponerElementoEnOrientacion(puerta43, Oeste())
+
+        bicho1 = creator.crear_bicho(5, 10, hab1, creator.crear_bicho_agresivo())
+        self.agregarBicho(bicho1)
+        bicho3 = creator.crear_bicho(50, 30, hab3, creator.crear_bicho_agresivo())
+        self.agregarBicho(bicho3)
+        bicho2 = creator.crear_bicho(5, 1, hab2, creator.crear_bicho_perezoso())
+        self.agregarBicho(bicho2)
+        bicho4 = creator.crear_bicho(5, 1, hab4, creator.crear_bicho_perezoso())
+        self.agregarBicho(bicho4)
+
+        hojaTotem = creator.crearTotem()
+        hojaBolsa = creator.crearBolsa()
+        hab1.agregarHijo(hojaTotem)
+        hab3.agregarHijo(hojaBolsa)
+
+        hab1.bicho = bicho1
+        hab2.bicho = bicho2
+        hab3.bicho = bicho3
+        hab4.bicho = bicho4
+
+        laberinto.agregarHabitacion(hab1)
+        laberinto.agregarHabitacion(hab2)
+        laberinto.agregarHabitacion(hab3)
+        laberinto.agregarHabitacion(hab4)
+
+        return laberinto
 
 
 if __name__ == "__main__":
     fm = Creator()
     juego = Juego()
-    juego.laberinto = juego.crearLaberinto4habitaciones(fm)
+    juego.laberinto = juego.crearLaberinto4habitacionesImplementaciones(fm)
 
 
-    print("\n\nLaberinto 4 habitaciones\n")
+    print("\n\nLaberinto 4 habitaciones IMPLEMENTACIONES\n")
 
     for hab in juego.laberinto.hijos:
         print(f"Habitación: {hab.num}")
-    print()
-    for bicho in juego.bichos:
-        print(bicho)
-        print(f"Bicho con {bicho.vidas} pts de vida y {bicho.poder} pts de poder")
-        print(f"Posición (habitación) del bicho: {bicho.posicion.num}")
-        print()
 
-    # juego.laberinto.recorrer(print)
+    print()
+
+    for bicho in juego.bichos:
+            print(bicho)
+            print(f"Bicho con {bicho.vidas} pts de vida y {bicho.poder} pts de poder")
+            print(f"Posición (habitación) del bicho: {bicho.posicion.num}")
+            print()
+
+    juego.iniciar_juego()
