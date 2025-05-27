@@ -1,7 +1,8 @@
-from Juego import *
-from LabBuilder import *
+from hojaObjetos import Totem, Pocima
+from objetosMapa import Bolsa
+from laberintoBuilder import LaberintoBuilder
 
-class LabBuilderImp(LabBuilder):
+class LabBuilderImp(LaberintoBuilder):
     def fabricarTotem(self):
         return Totem()
 

@@ -1,24 +1,15 @@
-from Juego import *
-from Implementaciones import *
-from Juego import COLOR
+from creator import Creator
+from creator import CreatorB,CreatorC
+from juego import Juego
+from este import Este
+from oeste import Oeste
+import time
 
 
 fm = Creator()
 juego = Juego()
-juego.laberinto = juego.crearLaberinto4habitacionesImplementaciones(fm)
-
-
-print("\n\nLaberinto 4 habitaciones IMPLEMENTACIONES\n")
-
-for hab in juego.laberinto.hijos:
-    print(f"Habitación: {hab.num}")
-
-print()
-
-for bicho in juego.bichos:
-    print(bicho)
-    print(f"Bicho con {bicho.vidas} pts de vida y {bicho.poder} pts de poder")
-    print(f"Posición (habitación) del bicho: {bicho.posicion.num}")
-    print()
-
-juego.iniciar_juego()
+juego.laberinto = juego.crearLaberinto2HabFM(fm)
+hab1=juego.obtenerHabitacion(1)
+hab2=juego.obtenerHabitacion(2)
+print(hab1.num)
+print(hab2.num)
