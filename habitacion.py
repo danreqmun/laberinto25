@@ -19,11 +19,11 @@ class Habitacion(Contenedor):
                 self.bicho.atacar()
         """
 
-        #if isinstance(alguien.estadoEnte, Vivo) and isinstance(alguien, Personaje):
-        #    for hijo in list(self.hijos):
-        #        if isinstance(hijo, ObjetosMapa):
-        #            hijo.recoger(alguien)
-        #            self.hijos.remove(hijo)
+        if isinstance(alguien, Personaje) and alguien.vidas > 0:
+            for hijo in list(self.hijos):
+                if isinstance(hijo, ObjetosMapa):
+                    hijo.recoger(alguien)
+                    self.hijos.remove(hijo)
 
 
     def visitarContenedor(self, unVisitor):

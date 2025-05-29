@@ -15,8 +15,8 @@ class Director:
         self.iniBuilder()
         self.fabricarLaberinto()
         self.fabricarJuego()
+        self.fabricarObjetos()
         self.fabricarBichos()
-        #self.fabricarObjetos()
         #self.NUEVOENTE()
 
     def fabricarJuego(self):
@@ -37,6 +37,7 @@ class Director:
         for each in self.dict['puertas']:
             self.builder.fabricarPuerta(each[0], each[1], each[2], each[3])
 
+    """
     def fabricarLaberintoRecursivo(self,  each, padre):
         if each['tipo'] == 'habitacion':
             con = self.builder.fabricarHabitacion(each['num'])
@@ -45,6 +46,34 @@ class Director:
         if 'hijos' in each.keys():
             for cadaUno in each['hijos']:
                 self.fabricarLaberintoRecursivo(cadaUno, con)
+    """
+
+    def fabricarLaberintoRecursivo(self, each, padre):
+        if each['tipo'] == 'habitacion':
+            con = self.builder.fabricarHabitacion(each['num'])
+
+            # Verifica si hay hijos tipo objeto
+            if 'hijos' in each:
+                for hijo in each['hijos']:
+                    if 'objeto' in hijo:
+                        if hijo['objeto'] == 'Totem':
+                            totem = self.builder.fabricarTotem()
+                            con.agregarHijo(totem)
+                        elif hijo['objeto'] == 'Bolsa':
+                            bolsa = self.builder.fabricarBolsa()
+                            con.agregarHijo(bolsa)
+            #if padre:
+            #    padre.agregarHijo(con)
+
+        elif each['tipo'] == 'tunel':
+            self.builder.fabricarTunelEn(padre)
+
+        # Recorre hijos recursivos si existen
+        if 'hijos' in each:
+            for hijo in each['hijos']:
+                # Solo recursión si no es objeto
+                if 'tipo' in hijo:
+                    self.fabricarLaberintoRecursivo(hijo, con)
 
     def fabricarObjetos(self):
         for hab in self.dict['laberinto']:

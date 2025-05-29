@@ -14,7 +14,7 @@ class Bicho(Ente):
         self.running = True
 
     def actua(self):
-        while self.estaVivo() and self.running:
+        while self.estaVivo() and self.running and self.vidas > 0:
             self.modo.actuar(self)
 
     def iniAgresivo(self):

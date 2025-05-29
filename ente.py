@@ -1,8 +1,14 @@
 from estadoEnte import Vivo, Muerto
 from color import COLOR
-#from inventario import Inventario
+from inventario import Inventario
+from inventarioHandler import InventarioHandler
 #from bicho import Bicho
-from objetosMapa import ObjetosMapa, Bolsa
+from objetosMapa import ObjetosMapa
+from totem import Totem
+from pocima import Pocima
+from bolsa import Bolsa
+
+
 #from hojaObjetos import Totem, Pocima
 
 class Ente:
@@ -17,39 +23,18 @@ class Ente:
         pass
 
 
-    """
     def esAtacadoPor(self, unAtacante):
-        print(f"{COLOR.WARNINGACCION} Ataque {COLOR.FIN} : {self} está siendo atacado por {unAtacante}")
-        self.vidas = self.vidas - unAtacante.poder
-
-        if self.vidas < 0:
-            self.vidas = 0
-
-        print(f"{COLOR.ORADOR} {self} Vidas restantes: {self.vidas} {COLOR.FIN}")
-
-        if self.vidas == 0 and isinstance(self, Personaje):
-            print(f"{COLOR.ORADOR} El ente {self} ha muerto {COLOR.FIN}")
-            if isinstance(self, Personaje):
-                if self.inventario.tiene_objeto(Totem):
-                    print(f"{COLOR.ORADOR} {self.nombre} ha usado el Tótem de la inmortalidad... {COLOR.BLANCO} ¡HA REVIVIDO! {COLOR.FIN}")
-                    self.inventario.usar(self, "Tótem de la inmortalidad")
-                    return
-                else:
-                    self.estadoEnte = Muerto()
-                    time.sleep(2)
-                    self.estadoEnte.morir(self)
-        from bicho import Bicho
-        if self.vidas == 0 and isinstance(self, Bicho):
-            self.estadoEnte.morir(self)
-    """
-
-    def esAtacadoPor(self, unAtacante):
-        print(f"{COLOR.WARNINGACCION} Ataque {COLOR.FIN} : {self} está siendo atacado por {unAtacante}")
+        print(f"{COLOR.WARNINGACCION} Ataque {COLOR.FIN} : {self} está siendo atacado por {unAtacante} ({unAtacante.poder} poder)")
         self.vidas = self.vidas - unAtacante.poder
         if self.vidas < 0:
             self.vidas = 0
         print("Vidas restantes: ", self.vidas)
         if self.vidas == 0:
+            if isinstance(self, Personaje):
+                if self.inventario.tiene_objeto(Totem):
+                    self.inventario.usar(self, "Tótem de la inmortalidad")
+                    return
+
             from bicho import Bicho
             if isinstance(self, Bicho):
                 self.juego.terminarBicho(self)
@@ -65,7 +50,7 @@ class Personaje(Ente):
         self.juego = juego
         self.nombre = nombre
 
-        #self.inventario = Inventario(peso_maximo=10)     # IMPLEMENTACION
+        self.inventario = Inventario(peso_maximo=10)     # IMPLEMENTACION
 
     def clonarLaberinto(self, tunel):
         tunel.puedeClonarLaberinto()

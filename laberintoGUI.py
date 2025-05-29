@@ -35,7 +35,7 @@ class LaberintoGUI:
         self.canvas.pack()
 
         self.calcularLaberinto()
-        for hab in self.juego.laberinto.hijos:
+        for hab in self.juego.laberinto.objetosBolsa:
             print("num-punto", hab.num, hab.forma.punto.x, hab.forma.punto.y)
         self.dibujarLaberinto()
         self.dibujarPersonaje()
@@ -101,7 +101,7 @@ class LaberintoGUI:
     def calcularPosicion(self):
         habitacion1 = self.juego.obtenerHabitacion(1)
         habitacion1.forma.punto = Point(0, 0)
-        for habitacion in self.juego.laberinto.hijos:
+        for habitacion in self.juego.laberinto.objetosBolsa:
             habitacion.calcularPosicion()
 
     def normalizar(self):
@@ -109,12 +109,12 @@ class LaberintoGUI:
         min_y = 0
 
         # Buscar min_x y min_y
-        for each in self.juego.laberinto.hijos:
+        for each in self.juego.laberinto.objetosBolsa:
             min_x = min(min_x, each.forma.punto.x)
             min_y = min(min_y, each.forma.punto.y)
 
         # Ajustar puntos
-        for each in self.juego.laberinto.hijos:
+        for each in self.juego.laberinto.objetosBolsa:
             un_punto = each.forma.punto
             nuevo_x = un_punto.x + abs(min_x)
             nuevo_y = un_punto.y + abs(min_y)
@@ -124,7 +124,7 @@ class LaberintoGUI:
         max_x = 0
         max_y = 0
 
-        for each in self.juego.laberinto.hijos:
+        for each in self.juego.laberinto.objetosBolsa:
             max_x = max(max_x, each.forma.punto.x)
             max_y = max(max_y, each.forma.punto.y)
 
@@ -137,7 +137,7 @@ class LaberintoGUI:
     def asignarPuntosReales(self):
         origen_x, origen_y = 70, 10
 
-        for each in self.juego.laberinto.hijos:
+        for each in self.juego.laberinto.objetosBolsa:
             x = origen_x + (each.forma.punto.x * self.ancho)
             y = origen_y + (each.forma.punto.y * self.alto)
 
