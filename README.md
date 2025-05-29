@@ -56,6 +56,10 @@ Digamos que tengo el siguiente Inventario: < Tótem , Pócima , Bolsa > y hago `
    - Devuelve True (se ha usado)
 En este ejemplo, ```inventario.objetosBolsa``` porque las pócimas solo las uso en la Bolsa. Si fuese un Totem, haría ```inventario.eliminar(self)```
 
+Una analogía De la vida real:
+Imagínate estar en una tienda y pides ayuda a un empleado, y este te dice “eso no es lo mío, pregúntale al siguiente”. Finalmente uno dice "sí, eso lo llevo yo" y te ayuda.
+Ese "pasar la petición" es lo que hace el ```manejar()```.
+
 #### TM
 Podemos observar cómo ObjetosMapa (abstracta) define ```usar()```, ```recoger()``` y ```devPeso()```, para que las subclases correspondienten las implementen.
 Bolsa sí las implementa directamente, mientras que para *Tótem* y *Pócima*, implementando las dos útlimas operaciones mencionadas anteriormente en su clase padre, *HojaObjeto*, pues estas operaciones son las mismas para cada objeto. Pasa ```usar()``` a los objetos hijos.
