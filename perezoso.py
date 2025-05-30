@@ -7,14 +7,14 @@ class Perezoso(Modo):
         super().__init__()
 
     def dormir(self, bicho):
-        print(COLOR.ORADOR + "Bicho perezoso duerme plácidamente. . . . ." + COLOR.FIN)
+        print("Bicho perezoso duerme plácidamente. . . . .")
         time.sleep(2)
 
     def caminar(self, bicho):
-        print(COLOR.ORADOR + "Bicho perezoso está... andando, o eso parece. . ." + COLOR.FIN)
+        print("Bicho perezoso está... andando, o eso parece. . .")
 
     def atacar(self, bicho):
-        print(COLOR.ORADOR + "Bicho perezoso intenta atacar pero. . . eso es mucho trabajo, no lo hace" + COLOR.FIN)
+        print("Bicho perezoso intenta atacar pero. . . eso es mucho trabajo, no lo hace")
 
     def __str__(self):
         return "perezoso"

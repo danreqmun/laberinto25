@@ -12,18 +12,13 @@ class Habitacion(Contenedor):
         print(f"{COLOR.ORADOR} {alguien} ha entrado en la habitación {self.num} {COLOR.FIN}")
         alguien.posicion = self
 
-        """
-        if isinstance(alguien, Personaje):
-            alguien.atacar()  # → llama a juego.buscarBicho()
-            if hasattr(self, "bicho") and self.bicho.estaVivo():
-                self.bicho.atacar()
-        """
-
         if isinstance(alguien, Personaje) and alguien.vidas > 0:
             for hijo in list(self.hijos):
+            #for hijo in alguien.posicion.hijos[:]:
                 if isinstance(hijo, ObjetosMapa):
                     hijo.recoger(alguien)
                     self.hijos.remove(hijo)
+
 
 
     def visitarContenedor(self, unVisitor):
