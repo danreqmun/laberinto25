@@ -67,3 +67,24 @@ Esta clase abstracta también define dos operaciones para que *Tótem* y *Pócim
 
 Cada objeto en esa cadena tiene su propio método manejar() para responder
 ![Diagrama UML final](https://github.com/danreqmun/laberinto25/blob/main/imagenes/CoR+TM.png?raw=true)
+
+#### Flyweight
+"Utiliza compartir para soportar un gran número de objetos pequeños".
+Este patrón es perfecto para la idea de que un bicho "suelta" algo al morir (monedas de oro y plata).
+Este patrón fabrica una sola copia de cada moneda y la "duplica", para ahorrar de manera eficiente memoria, sin tener que crear muchas monedas. Una manera de ver esto es al debuguear, se puede ver como en el inventario o en ```habitacion.hijos``` aparece Moneda varias veces, pero con la misma dirección de memoria.
+Esencialmente, Flyweight dice "Oye, esas monedas son todas iguales, ¿por qué no usamos solo una y la compartimos?".
+
+***Mal***: Esto crea 5 monedas de oro nuevas en memoria, aunque todas son iguales (mismo tipo, mismo peso) y se acabara con decenas (podrían ser miles) de monedas duplicadas en memoria.
+```python
+for _ in range(5):
+    habitacion.agregarHijo(Moneda("oro", 0.1))
+```
+
+***Bien (ahora)***: Ahora solo se crea una Moneda de oro y todas las habitaciones la reutilizan por referencia.
+```python
+moneda_oro = MonedaFactory.getMoneda("oro")
+for _ in range(5):
+    habitacion.agregarHijo(moneda_oro)
+```
+
+![Diagrama UML final](https://github.com/danreqmun/laberinto25/blob/main/imagenes/Flyweight.png?raw=true)
