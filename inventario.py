@@ -1,6 +1,7 @@
 from bolsa import Bolsa
 from color import COLOR
 from inventarioHandler import InventarioHandler
+from moneda import Moneda
 
 
 class Inventario:
@@ -37,3 +38,23 @@ class Inventario:
             for item in self.objetos:
                 if isinstance(item, Bolsa) and obj in item.objetosBolsa:
                     item.objetosBolsa.remove(obj)
+
+    def imprimir(self, personaje):
+        oro, plata = 0, 0
+        print(f"\n{COLOR.MORADO} 🧾 Inventario de {personaje.nombre} {COLOR.FIN}")
+        for obj in personaje.inventario.objetos:
+            if isinstance(obj, Bolsa):
+                print(f" - Bolsa con {len(obj.objetosBolsa)} objetos:")
+                for sub in obj.objetosBolsa:
+                    print(f"    • {sub.nombre} (peso: {sub.devPeso()})")
+            if isinstance(obj, Moneda):
+                if obj.tipo == "oro":
+                    oro += 1
+                elif obj.tipo == "plata":
+                    plata += 1
+            if not isinstance(obj, Moneda) and not isinstance(obj, Bolsa):
+                print(f" - {obj.nombre} (peso: {obj.devPeso()})")
+        if oro > 0: print(f" - {oro} monedas de oro (peso: {oro * 0.25:.2f})")
+        if plata > 0: print(f" - {plata} monedas de plata (peso: {plata * 0.1:.1f})")
+        print(f"\nPeso total: {personaje.inventario.pesoTotal()} / {personaje.inventario.peso_maximo}")
+        print(f"{COLOR.MORADO} 🧾 Inventario de {personaje.nombre} {COLOR.FIN}\n\n")

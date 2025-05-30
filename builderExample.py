@@ -14,17 +14,7 @@ def actualizar(juego):
         time.sleep(3)
         print(f"\n\n {COLOR.ALGOMALO}{juego.bichos} \n {juego.bichos_threads} {COLOR.FIN}\n\n")
 
-        #para imprimir el inventario por cada loop
-        print(f"\n{COLOR.MORADO} 🧾 Inventario de {juego.personaje.nombre} {COLOR.FIN}")
-        for obj in juego.personaje.inventario.objetos:
-            if isinstance(obj, Bolsa):
-                print(f" - Bolsa con {len(obj.objetosBolsa)} objetos:")
-                for sub in obj.objetosBolsa:
-                    print(f"    • {sub.nombre} (peso: {sub.devPeso()})")
-            else:
-                print(f" - {obj.nombre} (peso: {obj.devPeso()})")
-
-        print(f"\nPeso total: {juego.personaje.inventario.pesoTotal()} / {juego.personaje.inventario.peso_maximo}\n")
+        juego.personaje.inventario.imprimir(juego.personaje)
 
     juego.terminarJuego()
     os.kill(os.getpid(),signal.SIGTERM)
