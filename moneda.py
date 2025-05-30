@@ -1,10 +1,8 @@
 from flyweight import Flyweight
-from objetosMapa import ObjetosMapa
+#from objetosMapa import ObjetosMapa
 
 class Moneda(Flyweight):
     def __init__(self, tipo, peso):
-        Flyweight.__init__(self)
-        ObjetosMapa.__init__(self, f"Moneda de {tipo}")
         self.tipo = tipo #estado intrínseco (compartido)
         self.peso = peso
 

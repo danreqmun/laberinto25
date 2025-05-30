@@ -2,6 +2,7 @@ from bolsa import Bolsa
 from color import COLOR
 from inventarioHandler import InventarioHandler
 from moneda import Moneda
+from objetosMapa import ObjetosMapa
 
 
 class Inventario:
@@ -16,7 +17,8 @@ class Inventario:
     def agregar(self, obj):
         if self.pesoTotal() + obj.devPeso() <= self.peso_maximo:
             self.objetos.append(obj)
-            print(f"Objeto {COLOR.BLANCO} {obj.nombre} {COLOR.FIN} añadido al inventario")
+            if isinstance(obj, ObjetosMapa): print(f"Objeto {COLOR.BLANCO} {obj.nombre} {COLOR.FIN} añadido al inventario")
+            if isinstance(obj, Moneda): print(f"Objeto {COLOR.BLANCO} moneda de {obj.tipo} {COLOR.FIN} añadido al inventario")
 
             if isinstance(obj, InventarioHandler):
                 obj.siguiente = self.cadena
