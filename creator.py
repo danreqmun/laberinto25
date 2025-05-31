@@ -11,6 +11,7 @@ from laberinto import Laberinto
 from norte import Norte
 from pared import Pared
 from paredBomba import ParedBomba
+from paredFlecha import ParedFlecha
 from perezoso import Perezoso
 from puerta import Puerta
 from sur import Sur
@@ -105,3 +106,7 @@ class Creator:
 class CreatorB(Creator):
     def crear_pared_bomba(self):
         return ParedBomba()
+
+class CreatorF(Creator):
+    def crear_pared_flecha(self):
+        return ParedFlecha()

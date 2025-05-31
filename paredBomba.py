@@ -9,8 +9,8 @@ class ParedBomba(Pared):
     def entrar(self, ente):
         if self.activa:
             print(f"{COLOR.ALGOMALO} te has chocado contra una pared bomba {COLOR.FIN}")
-            ente.vidas = ente.vidas - 1
-            print(f"{ente} ha perdido 1 pto de vida. Vidas restantes: {ente.vidas}")
+            ente.vidas = ente.vidas - 2
+            print(f"{ente} ha perdido 2 ptos de vida. Vidas restantes: {ente.vidas}")
             if ente.vidas <= 0:
                 ente.vidas = 0
                 ente.estadoEnte.morir(ente)

@@ -12,6 +12,6 @@ class LabBuilderImp(LaberintoBuilder):
 
     def fabricarBolsa(self):
         bolsa = Bolsa.Bolsa()
-        bolsa.agregar(Pocima())
-        bolsa.agregar(Pocima())
+        bolsa.agregar(self.fabricarPocima())
+        bolsa.agregar(self.fabricarPocima())
         return bolsa

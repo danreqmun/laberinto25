@@ -253,7 +253,7 @@ class Juego:
 
         hojaTotem = creator.crearTotem()
         hojaBolsa = creator.crearBolsa()
-        hab1.agregarHijo(hojaTotem)
+        hab2.agregarHijo(hojaTotem)
         hab3.agregarHijo(hojaBolsa)
 
         hab1.bicho = bicho1

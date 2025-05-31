@@ -16,6 +16,7 @@ class Bolsa(ObjetosMapa, InventarioHandler):
         for obj in self.objetosBolsa:
             if isinstance(obj, InventarioHandler):
                 if obj.manejar(personaje, nombre_obj, inventario):
+                    self.objetosBolsa.remove(obj) # aquí es donde se elimina
                     return True
 
         # no estaba en la bolsa, pasa al siguiente handler

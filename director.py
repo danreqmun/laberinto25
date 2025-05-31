@@ -37,16 +37,6 @@ class Director:
         for each in self.dict['puertas']:
             self.builder.fabricarPuerta(each[0], each[1], each[2], each[3])
 
-    """
-    def fabricarLaberintoRecursivo(self,  each, padre):
-        if each['tipo'] == 'habitacion':
-            con = self.builder.fabricarHabitacion(each['num'])
-        if each['tipo'] == 'tunel':
-            self.builder.fabricarTunelEn(padre)
-        if 'hijos' in each.keys():
-            for cadaUno in each['hijos']:
-                self.fabricarLaberintoRecursivo(cadaUno, con)
-    """
 
     def fabricarLaberintoRecursivo(self, each, padre):
         if each['tipo'] == 'habitacion':
