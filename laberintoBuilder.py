@@ -1,3 +1,7 @@
+from bomba import Bomba
+from flecha import Flecha
+from paredBomba import ParedBomba
+from paredFlecha import ParedFlecha
 from puerta import Puerta
 from norte import Norte
 from sur import Sur
@@ -46,6 +50,18 @@ class LaberintoBuilder:
 
     def fabricarPared(self):
         return Pared()
+
+    def fabricarParedBomba(self):
+        return ParedBomba()
+
+    def fabricarParedFlecha(self):
+        return ParedFlecha()
+
+    def fabricarBombaDecorator(self):
+        return Bomba(self.fabricarPared())
+
+    def fabricarFlechaDecorator(self):
+        return Flecha(self.fabricarPared())
 
     def fabricarPuerta(self, lado1, obj1, lado2, obj2):
         hab1 = self.laberinto.obtenerHabitacion(lado1)

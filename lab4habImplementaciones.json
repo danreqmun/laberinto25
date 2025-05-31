@@ -1,0 +1,19 @@
+{
+	"forma":"cuadrado_implementaciones",
+    "laberinto":[
+	{"tipo":"habitacion", "num":1, "paredes": [ {"orientacion": "Norte", "tipo": "ParedBomba"} ], "hijos":[]},
+	{"tipo":"habitacion", "num":2, "paredes": [ {"orientacion": "Norte", "tipo": "ParedFlecha"} ], "hijos":[ {"objeto":"Totem"} ]},
+	{"tipo":"habitacion", "num":3, "paredes": [ {"orientacion": "Sur", "tipo": "BombaPared"} ], "hijos":[ {"objeto":"Bolsa"} ]},
+	{"tipo":"habitacion", "num":4, "paredes": [ {"orientacion": "Sur", "tipo": "FlechaPared"} ], "hijos":[]}
+	],
+	"puertas":[
+	[1, "Este", 2, "Oeste"], [2,"Sur", 4, "Norte"],
+	[3, "Este", 4, "Oeste"], [3, "Norte", 1, "Sur"]
+	],
+	"bichos":[
+		{"modo":"Agresivo", "posicion":1},
+		{"modo":"Agresivo", "posicion":3},
+		{"modo":"Perezoso", "posicion":2},
+		{"modo":"Perezoso", "posicion":4}
+	]
+}

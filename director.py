@@ -37,20 +37,26 @@ class Director:
         for each in self.dict['puertas']:
             self.builder.fabricarPuerta(each[0], each[1], each[2], each[3])
 
-    """
-    def fabricarLaberintoRecursivo(self,  each, padre):
-        if each['tipo'] == 'habitacion':
-            con = self.builder.fabricarHabitacion(each['num'])
-        if each['tipo'] == 'tunel':
-            self.builder.fabricarTunelEn(padre)
-        if 'hijos' in each.keys():
-            for cadaUno in each['hijos']:
-                self.fabricarLaberintoRecursivo(cadaUno, con)
-    """
 
     def fabricarLaberintoRecursivo(self, each, padre):
         if each['tipo'] == 'habitacion':
             con = self.builder.fabricarHabitacion(each['num'])
+
+            if 'paredes' in each:
+                for pared_info in each['paredes']:
+                    orientacion = self.builder.obtenerObjeto(pared_info['orientacion'])
+                    tipo = pared_info['tipo']
+
+                    if tipo == "ParedBomba":
+                        pared = self.builder.fabricarParedBomba()
+                    elif tipo == "ParedFlecha":
+                        pared = self.builder.fabricarParedFlecha()
+                    elif tipo == "BombaPared":
+                        pared = self.builder.fabricarBombaDecorator()
+                    elif tipo == "FlechaPared":
+                        pared = self.builder.fabricarFlechaDecorator()
+
+                    con.ponerElementoEnOrientacion(pared, orientacion)
 
             # Verifica si hay hijos tipo objeto
             if 'hijos' in each:

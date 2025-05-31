@@ -1,13 +1,10 @@
-from decorator import Decorator
 from color import COLOR
+from decorator import Decorator
 
-class Bomba(Decorator):
+class Flecha(Decorator):
     def __init__(self, elemento):
         super().__init__(elemento)
-        self.activa = True
-
-    """def activar_bomba(self):
-        self.activa = True"""
+        self.activa = False
 
     def entrar(self, ente):
         # Primero se ejecuta la lógica original del elemento decorado
@@ -15,7 +12,7 @@ class Bomba(Decorator):
 
         # Ahora la lógica del cohete
         if self.activa:
-            print(f"{COLOR.ALGOMALO} {ente} le ha dado una bomba (decorator) {COLOR.FIN}")
+            print(f"{COLOR.ALGOMALO} {ente} le ha dado un cohete (decorator) {COLOR.FIN}")
             ente.vidas -= 1
             if ente.vidas <= 0:
                 ente.vidas = 0
@@ -25,11 +22,9 @@ class Bomba(Decorator):
         else:
             print(f"{COLOR.ORADOR}El cohete del decorador ya se usó{COLOR.FIN}")
 
-    def aceptar(self, unVisitor):
-        unVisitor.visitarBomba(self)
 
-    def esBomba(self):
+    def esFlecha(self):
         return True
 
     def __repr__(self):
-        return "Bomba"
+        return "Flecha"

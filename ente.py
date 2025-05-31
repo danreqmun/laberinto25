@@ -2,7 +2,6 @@ from estadoEnte import Vivo, Muerto
 from color import COLOR
 from inventario import Inventario
 from inventarioHandler import InventarioHandler
-#from bicho import Bicho
 from objetosMapa import ObjetosMapa
 from totem import Totem
 from pocima import Pocima
@@ -30,7 +29,7 @@ class Ente:
         self.vidas = self.vidas - unAtacante.poder
         if self.vidas < 0:
             self.vidas = 0
-        print("Vidas restantes: ", self.vidas)
+        print(f"Vidas restantes: {self.vidas}")
 
         if self.vidas == 0:
             if isinstance(self, Personaje):
@@ -59,6 +58,9 @@ class Ente:
                 self.juego.terminarBicho(self)
                 #self.juego.bichos.remove(self)
             self.estadoEnte.morir(self)
+        else:
+            if isinstance(self, Personaje) and self.inventario.tiene_objeto(Bolsa):
+                self.inventario.usar(self, "Pócima de escudo")
 
 class Personaje(Ente):
     def __init__(self, vidas, poder, posicion, juego, nombre):

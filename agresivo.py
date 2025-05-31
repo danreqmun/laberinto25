@@ -7,15 +7,15 @@ class Agresivo(Modo):
         super().__init__()
 
     def dormir(self, bicho):
-        print("Bicho agresivo está durmiendo. . .")
+        print("\nBicho agresivo está durmiendo. . .\n")
         time.sleep(1)
 
     def caminar(self, bicho):
-        print("Bicho agresivo está caminando. . . agresivamente. . .")
+        print("\nBicho agresivo está caminando. . . agresivamente. . .\n")
         bicho.caminar()
 
     def atacar(self, bicho):
-        print("Bicho agresivo ha atacado con furia titánica")
+        print("\nBicho agresivo ha atacado con furia titánica\n")
         bicho.atacar()
 
     def __str__(self):

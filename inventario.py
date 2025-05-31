@@ -9,7 +9,7 @@ class Inventario:
     def __init__(self, peso_maximo):
         self.peso_maximo = peso_maximo
         self.objetos = []
-        self.cadena = None  # Primer manejador
+        self.cadena = None  # Primer manejador de la cadena
 
     def pesoTotal(self):
         return sum(obj.devPeso() for obj in self.objetos)
@@ -58,5 +58,5 @@ class Inventario:
                 print(f" - {obj.nombre} (peso: {obj.devPeso()})")
         if oro > 0: print(f" - {oro} monedas de oro (peso: {oro * 0.25:.2f})")
         if plata > 0: print(f" - {plata} monedas de plata (peso: {plata * 0.1:.1f})")
-        print(f"\nPeso total: {personaje.inventario.pesoTotal()} / {personaje.inventario.peso_maximo}")
+        print(f"\nPeso total: {personaje.inventario.pesoTotal():.2f} / {personaje.inventario.peso_maximo}")
         print(f"{COLOR.MORADO} 🧾 Inventario de {personaje.nombre} {COLOR.FIN}\n\n")
