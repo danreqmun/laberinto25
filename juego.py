@@ -267,3 +267,54 @@ class Juego:
         laberinto.agregarHabitacion(hab4)
 
         return laberinto
+
+
+    def pruebasCrearLaberinto2HabDecorators(self, creator):
+        # hab1 - hab2
+
+        laberinto = creator.crear_laberinto()
+        hab1 = creator.crearHabitacion(1)
+        hab2 = creator.crearHabitacion(2)
+
+        puerta = creator.crear_puerta(hab1, hab2)
+
+        hab1.ponerElementoEnOrientacion(puerta, Este())
+        hab2.ponerElementoEnOrientacion(puerta, Oeste())
+
+
+        pared1 = creator.crearPared()
+        bomba1 = creator.crear_bomba(pared1)
+        hab1.ponerElementoEnOrientacion(bomba1, Sur())
+
+        pared2 = creator.crearPared()
+        flecha1 = creator.crearFlecha(pared2)
+        hab2.ponerElementoEnOrientacion(flecha1, Sur())
+
+        laberinto.agregarHabitacion(hab1)
+        laberinto.agregarHabitacion(hab2)
+
+        return laberinto
+
+    def pruebasCrearLaberinto2HabFM(self, creatorB, creatorF):
+        # hab1 - hab2
+
+        laberinto = creatorB.crear_laberinto()
+        hab1 = creatorB.crearHabitacion(1)
+        hab2 = creatorB.crearHabitacion(2)
+
+        puerta = creatorB.crear_puerta(hab1, hab2)
+
+        hab1.ponerElementoEnOrientacion(puerta, Este())
+        hab2.ponerElementoEnOrientacion(puerta, Oeste())
+
+
+        bomba1 = creatorB.crear_pared_bomba()
+        hab1.ponerElementoEnOrientacion(bomba1, Sur())
+
+        flecha1 = creatorF.crear_pared_flecha()
+        hab2.ponerElementoEnOrientacion(flecha1, Sur())
+
+        laberinto.agregarHabitacion(hab1)
+        laberinto.agregarHabitacion(hab2)
+
+        return laberinto

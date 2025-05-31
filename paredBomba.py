@@ -8,15 +8,16 @@ class ParedBomba(Pared):
 
     def entrar(self, ente):
         if self.activa:
-            print(f"{COLOR.ALGOMALO} te has chocado contra una pared bomba {COLOR.FIN}")
+            print(f"{COLOR.ALGOMALO} {ente} ha chocado contra una pared bomba {COLOR.FIN}")
             ente.vidas = ente.vidas - 2
-            print(f"{ente} ha perdido 2 ptos de vida. Vidas restantes: {ente.vidas}")
             if ente.vidas <= 0:
                 ente.vidas = 0
                 ente.estadoEnte.morir(ente)
+            print(f"{COLOR.ORADOR} {ente} ha perdido 2 ptos de vida. Vidas restantes: {ente.vidas} {COLOR.FIN}")
+
             self.activa = False
         else:
-            print("La pared bomba ya ha explotado o está desactivada")
+            print(f"{COLOR.ORADOR}La pared bomba ya ha explotado o está desactivada {COLOR.FIN}")
 
     """def esActiva(self):
         if self.activa:

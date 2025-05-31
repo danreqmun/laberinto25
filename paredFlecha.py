@@ -8,12 +8,12 @@ class ParedFlecha(Pared):
 
     def entrar(self, alguien):
         if self.activa:
-            print(f"{COLOR.ALGOMALO} te has chocado contra una pared flecha {COLOR.FIN}")
+            print(f"{COLOR.ALGOMALO} {alguien} ha chocado contra una pared flecha {COLOR.FIN}")
             alguien.vidas = alguien.vidas - 1
-            print(f"{alguien} ha perdido 1 pto de vida. Vidas restantes: {alguien.vidas}")
             if alguien.vidas <= 0:
                 alguien.vidas = 0
                 alguien.estadoEnte.morir(alguien)
+            print(f"{COLOR.ORADOR} {alguien} ha perdido 1 pto de vida. Vidas restantes: {alguien.vidas} {COLOR.FIN}")
             self.activa = False
         else:
-            print(f"La pared flecha ya ha hecho daño o está desactivada")
+            print(f"{COLOR.ORADOR}La pared flecha ya ha hecho daño o está desactivada {COLOR.FIN}")

@@ -6,17 +6,22 @@ class Flecha(Decorator):
         super().__init__(elemento)
         self.activa = False
 
-    def entrar(self, alguien):
-        if not self.activa:
-            print(f"{COLOR.ALGOMALO} Flecha activada... ¡zas! {COLOR.FIN}")
-            alguien.vidas -= 1
-            print(f"{alguien} pierde 1 pto de vida. Vidas restantes: {alguien.vidas}")
-            self.activa = True
-        else:
-            print("Flecha ya usada")
+    def entrar(self, ente):
+        # Primero se ejecuta la lógica original del elemento decorado
+        self.elemento.entrar(ente)
 
-        # Pasar al comportamiento base
-        self.elemento.entrar(alguien)
+        # Ahora la lógica del cohete
+        if self.activa:
+            print(f"{COLOR.ALGOMALO} {ente} le ha dado un cohete (decorator) {COLOR.FIN}")
+            ente.vidas -= 1
+            if ente.vidas <= 0:
+                ente.vidas = 0
+                ente.estadoEnte.morir(ente)
+            print(f"{COLOR.ORADOR} {ente} pierde una vida. Vidas restantes: {ente.vidas} {COLOR.FIN}")
+            self.activa = False
+        else:
+            print(f"{COLOR.ORADOR}El cohete del decorador ya se usó{COLOR.FIN}")
+
 
     def esFlecha(self):
         return True

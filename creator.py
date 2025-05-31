@@ -2,10 +2,11 @@ from agresivo import Agresivo
 from bicho import Bicho
 from bomba import Bomba
 import hojaObjetos
-import totem
-import pocima
-import bolsa as Bolsa
+from totem import Totem
+from pocima import Pocima
+from bolsa import Bolsa
 import objetosMapa
+from flecha import Flecha
 from juego import Habitacion
 from laberinto import Laberinto
 from norte import Norte
@@ -91,16 +92,19 @@ class Creator:
 
     # IMPLEMENTACIONES
     def crearTotem(self):
-        return totem.Totem()
+        return Totem()
 
     def crearPocima(self):
-        return pocima.Pocima()
+        return Pocima()
 
     def crearBolsa(self):
-        bolsa = Bolsa.Bolsa()
+        bolsa = Bolsa()
         bolsa.agregar(self.crearPocima())
         bolsa.agregar(self.crearPocima())
         return bolsa
+
+    def crearFlecha(self, elemento):
+        return Flecha(elemento)
 
 
 class CreatorB(Creator):
