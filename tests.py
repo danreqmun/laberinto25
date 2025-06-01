@@ -1,6 +1,7 @@
 import random
 import unittest
 
+from bolsa import Bolsa
 from bomba import Bomba
 from estadoEnte import Vivo
 from flecha import Flecha
@@ -63,6 +64,15 @@ class Tests(unittest.TestCase):
         #hay que comparar la clase. Si no, cada Vivo() tiene una dir de memoria diferente
         self.assertEqual(p.vidas, 20)
         self.assertEqual(p.poder, 12)
+
+    def test_bolsa(self):
+        p = Personaje(5, 2, None, None, "Conejillo de Indias")
+        bolsa = Bolsa()
+        bolsa.agregar(Pocima())
+        p.inventario.agregar(bolsa)
+        p.inventario.usar(p, "Pócima de escudo")
+
+        self.assertEqual(p.vidas, 10)
 
     def test_recoger_moneda(self):
         juego = Juego()
