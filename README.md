@@ -2,8 +2,6 @@
 
 ## Juego del laberinto (24-25)
 
-### La última implementación del proyecto está aun work in progress
-
 ---
 
 Repositorio en el que estará mi implementación en **Python** del laberinto hecho en clase en **Smalltalk**.
@@ -37,12 +35,16 @@ El documento se irá actualizando para añadir, modificar, o eliminar, si fuese 
 
 ![Diagrama UML pre-caos](https://github.com/danreqmun/laberinto25/blob/main/imagenes/Main.png?raw=true)
 
-## Modificaciones
+---
+
+<br>
+
+# Modificaciones
 
 Como no deja exportar (por ser versión gratuita, supongo) y hacer una captura de pantalla tan grande haría que no se pudiese leer bien, haré capturas de pantallas a las modificaciones.
 
-### Template Method (TM) + Chain of Responsibility (CoR)
-#### CoR
+## Template Method (TM) + Chain of Responsibility (CoR)
+### CoR
 El método ```manejar()``` es el corazón del patrón CoR.
 Una explicación sencilla del cómo funciona es:
 Imagina una fila de objetos, como una cadena ⛓️, y tú haces una pregunta:
@@ -60,15 +62,17 @@ Una analogía De la vida real:
 Imagínate estar en una tienda y pides ayuda a un empleado, y este te dice “eso no es lo mío, pregúntale al siguiente”. Finalmente uno dice "sí, eso lo llevo yo" y te ayuda.
 Ese "pasar la petición" es lo que hace el ```manejar()```.
 
-#### TM
+### TM
 Podemos observar cómo ObjetosMapa (abstracta) define ```usar()```, ```recoger()``` y ```devPeso()```, para que las subclases correspondienten las implementen.
 Bolsa sí las implementa directamente, mientras que para *Tótem* y *Pócima*, implementando las dos útlimas operaciones mencionadas anteriormente en su clase padre, *HojaObjeto*, pues estas operaciones son las mismas para cada objeto. Pasa ```usar()``` a los objetos hijos.
-Esta clase abstracta también define dos operaciones para que *Tótem* y *Pócima* implementen, ```es_usable``` y ```aplicarEfecto```, ya que cada objeto tiene su propia condición y efecto(s).
+Esta clase abstracta también define dos operaciones para que *Tótem* y *Pócima* implementen ```es_usable``` y ```aplicarEfecto```, ya que cada objeto tiene su propia condición y efecto(s).
 
 Cada objeto en esa cadena tiene su propio método manejar() para responder
-![Diagrama UML final](https://github.com/danreqmun/laberinto25/blob/main/imagenes/CoR+TM.png?raw=true)
+![Diagrama CoR y TM](https://github.com/danreqmun/laberinto25/blob/main/imagenes/CoR+TM.png?raw=true)
 
-#### Flyweight
+<br>
+
+## Flyweight
 "Utiliza compartir para soportar un gran número de objetos pequeños".
 Este patrón es perfecto para la idea de que un bicho "suelta" algo al morir (monedas de oro y plata).
 Este patrón fabrica una sola copia de cada moneda y la "duplica", para ahorrar de manera eficiente memoria, sin tener que crear muchas monedas. Una manera de ver esto es al debuguear, se puede ver como en el inventario o en ```habitacion.hijos``` aparece Moneda varias veces, pero con la misma dirección de memoria.
@@ -82,9 +86,29 @@ for _ in range(5):
 
 ***Bien (ahora)***: Ahora solo se crea una Moneda de oro y todas las habitaciones la reutilizan por referencia.
 ```python
-moneda_oro = MonedaFactory.getMoneda("oro")
-for _ in range(5):
-    habitacion.agregarHijo(moneda_oro)
+oro = MonedaFactory.getMoneda("oro")
+o = random.randint(1, 4)
+for _ in range(o):
+    unAtacante.posicion.agregarHijo(oro)
 ```
 
-![Diagrama UML final](https://github.com/danreqmun/laberinto25/blob/main/imagenes/Flyweight.png?raw=true)
+![Diagrama Flyweight](https://github.com/danreqmun/laberinto25/blob/main/imagenes/Flyweight.png?raw=true)
+
+<br>
+
+## Decorator y Factory Method (FM)
+### Decorator
+Con este patrón, se puede "envolver" o "vestir" cualquier ElementoMapa, cosa que añade dinamismo. En este caso, Pared.
+```python
+Flecha(Pared())
+```
+
+### Factory Method
+Si solo queremos una pared que haga algo y ya, sin mezclar, podemos usar este patrón.
+```python
+return ParedFlecha()
+```
+
+***Nota***: Es muy importante que se implemente la operación ```entrar()``` en ambas clases. Y en las clases Decorator (flecha y bomba), hay que añadir ```self.elemento.entrar(ente)```, para que se ejecute primero la lógica original del elemento decorado.
+
+![Diagrama Decorator y Factory Method](https://github.com/danreqmun/laberinto25/blob/main/imagenes/Decorator+FM.png?raw=true)
