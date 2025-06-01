@@ -32,8 +32,7 @@ class Ente:
                 unAtacante.posicion.agregarHijo(oro)  # La deja en la habitación
             for _ in range(p):
                 unAtacante.posicion.agregarHijo(plata)
-            print(
-                f"{COLOR.ORADOR} {self} ha soltado {COLOR.BLANCO} {o} monedas de oro y {p} monedas de plata al morir {COLOR.FIN}")
+            print(f"{COLOR.ORADOR} {self} ha soltado {COLOR.BLANCO} {o} monedas de oro y {p} monedas de plata al morir {COLOR.FIN}")
 
             for hijo in list(unAtacante.posicion.hijos):
                 # for hijo in alguien.posicion.hijos[:]:
