@@ -318,3 +318,9 @@ class Juego:
         laberinto.agregarHabitacion(hab2)
 
         return laberinto
+
+    def pruebasCrearLaberinto1Hab(self, creator):
+        laberinto = creator.crear_laberinto()
+        hab1 = creator.crearHabitacion(1)
+        laberinto.agregarHabitacion(hab1)
+        return laberinto

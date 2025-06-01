@@ -22,8 +22,33 @@ class Ente:
     def clonarLaberinto(self, tunel):
         pass
 
+    def monedasBichos(self, unAtacante):
+        from bicho import Bicho
+        if isinstance(self, Bicho):
+            oro = MonedaFactory.getMoneda("oro")
+            plata = MonedaFactory.getMoneda("plata")
+            o, p = random.randint(1, 4), random.randint(3, 10)
+            for _ in range(o):
+                unAtacante.posicion.agregarHijo(oro)  # La deja en la habitación
+            for _ in range(p):
+                unAtacante.posicion.agregarHijo(plata)
+            print(f"{COLOR.ORADOR} {self} ha soltado {COLOR.BLANCO} {o} monedas de oro y {p} monedas de plata al morir {COLOR.FIN}")
+
+            for hijo in list(unAtacante.posicion.hijos):
+                # for hijo in alguien.posicion.hijos[:]:
+                from moneda import Moneda
+                if isinstance(hijo, Moneda):
+                    hijo.recoger(unAtacante)
+                    unAtacante.posicion.hijos.remove(hijo)
+
+            self.juego.terminarBicho(self)
 
     def esAtacadoPor(self, unAtacante):
+
+        from bicho import Bicho
+        if isinstance(unAtacante, Bicho) and unAtacante.vidas == 0:
+            return
+
         print(f"{COLOR.WARNINGACCION} Ataque {COLOR.FIN} : {COLOR.ALGOMALO} {self} está siendo atacado por {unAtacante} ({unAtacante.poder} poder){COLOR.FIN}")
 
         self.vidas = self.vidas - unAtacante.poder
@@ -39,24 +64,8 @@ class Ente:
 
             from bicho import Bicho
             if isinstance(self, Bicho):
-                oro = MonedaFactory.getMoneda("oro")
-                plata = MonedaFactory.getMoneda("plata")
-                o, p = random.randint(1, 4), random.randint(3, 10)
-                for _ in range(o):
-                    unAtacante.posicion.agregarHijo(oro)  # La deja en la habitación
-                for _ in range(p):
-                    unAtacante.posicion.agregarHijo(plata)
-                print(f"{COLOR.ORADOR} {self} ha soltado {COLOR.BLANCO} {o} monedas de oro y {p} monedas de plata al morir {COLOR.FIN}")
+                self.monedasBichos(unAtacante)
 
-                for hijo in list(unAtacante.posicion.hijos):
-                    # for hijo in alguien.posicion.hijos[:]:
-                    from moneda import Moneda
-                    if isinstance(hijo, Moneda):
-                        hijo.recoger(unAtacante)
-                        unAtacante.posicion.hijos.remove(hijo)
-
-                self.juego.terminarBicho(self)
-                #self.juego.bichos.remove(self)
             self.estadoEnte.morir(self)
         else:
             if isinstance(self, Personaje) and self.inventario.tiene_objeto(Bolsa):

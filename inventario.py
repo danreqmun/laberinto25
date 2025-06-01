@@ -24,7 +24,7 @@ class Inventario:
                 obj.siguiente = self.cadena
                 self.cadena = obj
         else:
-            print(f"No se puede añadir {obj.nombre} al inventario. Peso máximo: {self.peso_maximo} ")
+            print(f"No se puede añadir nada más al inventario. Peso máximo: {self.peso_maximo} ")
 
     def usar(self, personaje, nombre_obj):
         if self.cadena:
